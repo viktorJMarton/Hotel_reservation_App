@@ -8,16 +8,16 @@
       <form>
          <div class='row'>
             <div class='column'>
-               <label for="check-in-date">Check-in date:</label>   
+               <label for="check-in-date">Érkezés:</label>   
             </div>
             <div class='column'>
-               <label for="check-out-date">Check-out date:</label>   
+               <label for="check-out-date">Távozás</label>   
             </div>
             <div class='column'>
-               <label for="adults">Number of adults:</label>  
+               <label for="adults">Felnőttek száma:</label>  
             </div>
             <div class='column'>
-               <label for="children">Number of children:</label>
+               <label for="children">Gyerekek száma:</label>
             </div>
          </div>
          

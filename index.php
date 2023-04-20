@@ -13,7 +13,7 @@
     <header>
 	<?php include("layouts/partials/header.html"); ?>
     </header>
-	<?php include("layouts/partials/navigation.html"); ?>
+	<?php include("layouts/partials/navigation.php"); ?>
     <main>
 	<?php include("layouts/partials/welcome.php"); ?>
     </main>
