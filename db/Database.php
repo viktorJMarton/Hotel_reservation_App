@@ -11,12 +11,12 @@ class Database{
   
     public function __construct() {
       $config = parse_ini_file('init/config.ini');
-     
-     echo $this->db_name = $config['dbname'];
-     echo $this->user = $config['user'];
-     echo $this->pwd = $config['password'];
-     echo $this->port =$config['port'];
-     echo $this->host =$config['host'];
+    
+    $this->db_name = $config['dbname'];
+    $this->user = $config['user'];
+    $this->pwd = $config['password'];
+    $this->port =$config['port'];
+    $this->host =$config['host'];
 
       error_reporting(E_ALL);
       ini_set('display_errors', '1');
