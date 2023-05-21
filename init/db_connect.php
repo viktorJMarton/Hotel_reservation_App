@@ -1,5 +1,5 @@
 <?php
-require_once 'db/Database.php';
+require_once 'models/Database.php';
 
 // Define the database connection parameters
 // Check if the database connection has already been established

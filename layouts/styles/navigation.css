@@ -34,4 +34,28 @@ nav {
     text-decoration:underline;
     color:black;
     }
-    
+
+    select {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        border-radius: 15px;
+        border:  2px solid rgb(255 69 0 / 60%);
+        margin: 15px;
+        box-sizing: border-box;
+      }
+      #movie_selector {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border-radius: 15px;
+  margin: 15px;
+  border:  2px solid rgb(255 69 0 / 60%);
+  box-sizing: border-box;
+  border: 2px solid transparent;
+}
+
+#movie_selector:focus {
+  outline: none;
+  border-color: #000;
+}
