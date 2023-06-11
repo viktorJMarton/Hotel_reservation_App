@@ -2,7 +2,10 @@
     <link rel="stylesheet" type="text/css" href="../3rd_party/jquerry_seat_chart/jquery.seat-charts.css">
     <link rel="stylesheet" type="text/css" href="../3rd_party/jquerry_seat_chart/styles.css">
 </head>
-
+<?php 
+$seatMapJson = $db->query("SELECT seat_map FROM roomlayout;")['seat_map'];
+$seatMapArray = array_values(json_decode($seatMapJson, true));
+?> 
         <div class="container">
             <div id="seat-map">
             </div>
@@ -24,23 +27,13 @@
 
     </div>
     <script>
-        var testJsVar = <?php echo $db->queryDbToJs("SELECT 1") ?>;
-     
+       
+      
+       
         $(document).ready(function () {
-
+            var seatMap = <?php echo json_encode($seatMapArray); ?>;
             var sc = $('#seat-map').seatCharts({
-                map: [
-                    'aaaaaaDDDDD',
-                    'aaaaaaaaaaa',
-                    'aaaaaaaaaaa',
-                    'aaaaaaaaaaa',
-                    'aaaaaaaaaaa',
-                    'aaaaaaaaaaa',
-                    'bbbbbbbbbbb', //TODO: idea of  implementing the db based on this JS first .
-                    'bbbbbbbbbbb',
-                    'bbbbbbbbbbb',
-                    'ccccccccccc'
-                ],
+                map:seatMap,
                 seats: {
                     a: {
                         price: 99.99,
@@ -74,9 +67,8 @@
             sc.get(['2_6', '1_7']).node().css({
                 color: '#ffcfcf'
             });
-            console.log(sc.seats);
+
             console.log('Seat 1_2 costs ' + sc.get('1_2').data().price + ' and is currently ' + sc.status('1_2'));
 
         });
-      
     </script>

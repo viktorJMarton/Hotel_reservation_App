@@ -61,16 +61,16 @@ class Database{
       return "A Jelszo megtekintese letiltva";
     }
 
-    public function queryDbToJs($query_str) {
+    public function query($query_str) {
+      try {
+        $result = self::$db->query($query_str);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row;
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
       
-      $result =self::$db->query($query_str);
-      $data = array();
-      while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $data[] = $row;
-      }
-      $json_data = json_encode($data);
-      
-      return $json_data;
+     
   }
 
   public function addSession($room_id, $start_time, $end_time, $screentime) {
