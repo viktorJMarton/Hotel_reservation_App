@@ -11,6 +11,7 @@
   background-size: cover;
   min-height: 65%;
   margin-bottom:130px;
+<<<<<<< Updated upstream
   transition: backdrop-filter 0.5s;
   backdrop-filter: blur(0px);
   animation: blurAnimation 60s infinite;
@@ -26,6 +27,8 @@
   100% {
     backdrop-filter: blur(0px);
   }
+=======
+>>>>>>> Stashed changes
 }
 
 .welcome-message::before{
