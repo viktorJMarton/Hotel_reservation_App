@@ -62,6 +62,9 @@ class Database{
     }
 
     public function query($query_str) {
+      if (!isset(self::$db)){
+        self::$db->connect();
+      }
       try {
         $result = self::$db->query($query_str);
         $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -83,6 +86,18 @@ class Database{
     $stmt->execute();
 }
 
+  public function getSeatMapOfRoom($room_id){
+    $statement = self::$db->query("SELECT get_seat_map($room_id)");
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    $seat_map_json = $result['get_seat_map'];
+    $seat_map_array = array_values(json_decode($seat_map_json, true));
+
+    $seat_map_array2 = array_map(function ($row) {
+      return preg_replace('/\d+/', '', $row);
+  }, $seat_map_array);
+  
+  return $seat_map_array2;
+  }
    
   }
 ?>

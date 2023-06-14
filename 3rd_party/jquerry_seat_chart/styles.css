@@ -30,7 +30,7 @@ a {
 	margin-left: 35px;
 	font-size: 12px;
 	position: relative;
-	height: 231px;
+	height: 100px;
 }
 .booking-details h2 {
 	margin: 25px 0 20px 0;
@@ -90,7 +90,7 @@ span.seatCharts-legendDescription {
 	line-height: 20px;
 }
 .checkout-button {
-	display: block;
+	display: inline;
 	margin: 10px 0;
 	font-size: 14px;
 }

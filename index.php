@@ -11,8 +11,6 @@
     <script src="../3rd_party/jquerry_seat_chart/jquery.seat-charts.js"></script>
   </head>
   <body>
-  <nav>
-  </nav>
 	  <?php include("layouts/partials/_navigation.php"); ?>
     <main>
     <?php include("layouts/partials/_main.php"); ?>
