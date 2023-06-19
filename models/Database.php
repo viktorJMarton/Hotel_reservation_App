@@ -76,7 +76,7 @@ class Database{
      
   }
 
-  public function addSession($room_id, $start_time, $end_time, $screentime) {
+  public function addScreening($room_id, $start_time, $end_time, $screentime) {
     $sql = "INSERT INTO sessions (room_id, start_time, end_time, screentime) VALUES (:room_id, :start_time, :end_time, :screentime)";
     $stmt = self::$db->prepare($sql);
     $stmt->bindParam(':room_id', $room_id);
@@ -86,8 +86,8 @@ class Database{
     $stmt->execute();
 }
 
-  public function getSeatMapOfRoom($room_id){
-    $statement = self::$db->query("SELECT get_seat_map($room_id)");
+  public function getSeatMapOfScreening($scr_id){
+    $statement = self::$db->query("SELECT public.get_seat_map($scr_id)");
     $result = $statement->fetch(PDO::FETCH_ASSOC);
     $seat_map_json = $result['get_seat_map'];
     $seat_map_array = array_values(json_decode($seat_map_json, true));
@@ -97,6 +97,19 @@ class Database{
   }, $seat_map_array);
   
   return $seat_map_array2;
+  }
+
+  public function getPriceOfScreening($scr_id){
+    $statement = self::$db->query("SELECT public.get_price($scr_id)");
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    return $result['get_price'];
+}
+
+// Where does this function goes ?
+  public function getScreeningsByTime($date_time){
+    $statement = self::db->query("SELECT get_scr_by_time($date_time");
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    return $result;
   }
    
   }
