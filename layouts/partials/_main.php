@@ -1,11 +1,10 @@
+<?php
+$date = '2023-06-20';
+$screeningIds = $db->getScreeningsByTime($date);
+include "_seat_map.php";
 
-<?php 
-
-
-
-
-
+foreach ($screeningIds as $screeningId) {
+    renderSeatMap($db,$screeningId);
+    echo "<br></br>";
+}
 ?>
-
-
-<?php include "_seat_map.php" ?>

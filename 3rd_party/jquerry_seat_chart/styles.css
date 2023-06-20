@@ -18,11 +18,13 @@ a {
 	text-align: center;
 }
 .container {
-	margin: 0 auto;
-	width: 100%;
+    margin: 0 auto;
+    width: 100%;
     display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
+    justify-content: flex-start;
+    align-items: flex-end;
+    background: white;
+    padding-bottom: 2%;
 }
 .booking-details {
 	float: left;
@@ -90,11 +92,40 @@ span.seatCharts-legendDescription {
 	margin-left: 0px;
 	line-height: 20px;
 }
+
 .checkout-button {
-	display: inline;
-	margin: 10px 0;
-	font-size: 14px;
+    display: inline;
+    margin: 10px 0;
+    padding: 2px;
+    font-size: 14px;
+    width: 50%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0);
+    border-radius: 15px;
+    max-height: min-content;
+    margin-left: 2px;
+    background-color: rgba(255, 68, 0, 0.78);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.7s ease;
 }
+
+.checkout-button:hover {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(255 69 0 / 60%);
+    background-color: #fff;
+    color: rgb(255 69 0 / 60%);
+    transition: all 0.7s ease;
+}
+
+.checkout-button:not(:hover) {
+    transition: all 0.7s ease;
+}
+
+
 #selected-seats {
 	max-height: 60px;
 	overflow-y: scroll;

@@ -2,149 +2,126 @@
     <link rel="stylesheet" type="text/css" href="../3rd_party/jquerry_seat_chart/jquery.seat-charts.css">
     <link rel="stylesheet" type="text/css" href="../3rd_party/jquerry_seat_chart/styles.css">
 </head>
-        <div class="container">
-            <div id="seat-map">
-            </div>
-            <div class="booking-details">
-                <h3> Kiválasztott Helyek (<span id="counter">0</span>):</h3>
-                <ul id="selected-seats"></ul>
 
-                Total: <b><span id="total">0</span> HUF</b>
-                <button class="checkout-button">Checkout &raquo;</button>
+<?php
+function renderSeatMap($db, $screeningId)
+{
+    $seatMap = $db->getSeatMapOfScreening($screeningId);
+    $price = $db->getPriceOfScreening($screeningId);
+    //$movieName = $db->getMovieNameByScreening($screeningId);
+?>
 
-
-            </div>
-
-
-
+<div class="container">
+    <div id="seat-map-<?= $screeningId ?>"></div>
+    <div class="booking-details">
+        <h3> Kiválasztott Helyek (<span id="counter-<?= $screeningId ?>">0</span>):</h3>
+        <ul id="selected-seats-<?= $screeningId ?>"></ul>
+        Total: <b><span id="total-<?= $screeningId ?>">0</span> HUF</b>
+        <button class="checkout-button" data-screening-id="<?= $screeningId ?>">Foglalás &raquo;</button>
     </div>
-    <script>
-       
-      
-       
-        $(document).ready(function () {
-            var seatMap = <?php echo json_encode($db->getSeatMapOfScreening(21)); ?>;
-			var firstSeatLabel = 1;
-			var price = <?php echo $db->getPriceOfScreening(21); ?>;
-            var $cart = $('#selected-seats'),
-		        $counter = $('#counter'),
-		        $total = $('#total'),
-                sc = $('#seat-map').seatCharts({
-                map:seatMap,
-                seats: {
-                    a: {
-                        price:price,
+</div>
 
-                        classes: 'seat' //your custom CSS class
-                    },
-					b: {
-                        price:price,
-                        classes: 'seat unavailable' //your custom CSS class
-                    },
-					c: {
-                        price:price,
-                        classes: 'seat' //your custom CSS class
-                    },
-					d: {
-                        price:price,
-                        classes: 'seat' //your custom CSS class
-                    }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../3rd_party/jquerry_seat_chart/jquery.seat-charts.js"></script>
 
-                },
-                naming : {
-						top : false,
-						getLabel : function (character, row, column) {
-							return firstSeatLabel++;
-						},
-					},
-					click: function () {
-						if (this.status() == 'available') {
-							//let's create a new <li> which we'll add to the cart items
-							$('<li>'+this.data().category+' Seat # '+this.settings.label+': <b>'+this.data().price+' HUF</b> <a href="#" class="cancel-cart-item">[cancel]</a></li>')
-								.attr('id', 'cart-item-'+this.settings.id)
-								.data('seatId', this.settings.id)
-								.appendTo($cart);
-							
-							/*
-							 * Lets update the counter and total
-							 *
-							 * .find function will not find the current seat, because it will change its stauts only after return
-							 * 'selected'. This is why we have to add 1 to the length and the current seat price to the total.
-							 */
-							$counter.text(sc.find('selected').length+1);
-							$total.text(recalculateTotal(sc)+this.data().price);
-							
-							return 'selected';
-						} else if (this.status() == 'selected') {
-							//update the counter
-							$counter.text(sc.find('selected').length-1);
-							//and total
-							$total.text(recalculateTotal(sc)-this.data().price);
-						
-							//remove the item from our cart
-							$('#cart-item-'+this.settings.id).remove();
-						
-							//seat has been vacated
-							return 'available';
-						} else if (this.status() == 'unavailable') {
-							//seat has been already booked
-							return 'unavailable';
-						} else {
-							return this.style();
-						}
-					}
-				});
-
-				var bSeats = sc.find('b');
-   				bSeats.status('unavailable');
-
-				//this will handle "[cancel]" link clickhes
-				$('#selected-seats').on('click', '.cancel-cart-item', function () {
-                    event.preventDefault(); //let's just trigger Click event on the appropriate seat, so we don't have to repeat the logic here
-					sc.get($(this).parents('li:first').data('seatId')).click();
-				});
-
-				
-		$('.checkout-button').click(function () {
-        var selectedSeats = sc.find('selected'); // Kiválasztott székek lekérése
-        var seatIds = [];
-
-		
-
-        // Kiválasztott székek azonosítóinak gyűjtése
-        selectedSeats.each(function () {
-            seatIds.push(this.settings.id);
+<script>
+    function recalculateTotal(sc) {
+        var total = 0;
+        sc.find("selected").each(function () {
+            total += this.data().price;
         });
+        return total;
+    }
 
-        // AJAX kérés az adatok mentésére az adatbázisba
-        $.ajax({
-            url: 'mentes.php', // A mentési fájl helye és neve
-            method: 'POST',
-            data: {
-                seatIds: seatIds, // Kiválasztott székek azonosítói
-                screeningId: 21 // A vetítés azonosítója
+    $(document).ready(function () {
+        var scr_id = <?= $screeningId ?>;
+        var seatMap = <?= json_encode($seatMap) ?>;
+        var firstSeatLabel = 1;
+        var price = <?= $price ?>;
+        var $cart = $("#selected-seats-<?= $screeningId ?>");
+        var $counter = $("#counter-<?= $screeningId ?>");
+        var $total = $("#total-<?= $screeningId ?>");
+        var sc = $("#seat-map-<?= $screeningId ?>").seatCharts({
+            map: seatMap,
+            seats: {
+                a: { price: price, classes: "seat" },
+                b: { price: price, classes: "seat unavailable" },
+                c: { price: price, classes: "seat" },
+                d: { price: price, classes: "seat" }
             },
-            success: function (response) {
-                // Sikeres mentés esetén itt végrehajthatod a szükséges tevékenységeket
-                console.log(response); // Ezt átírhatod a saját logikádra
-            },
-            error: function (xhr, status, error) {
-                // Hiba esetén itt kezelheted le a hibát
-                console.log(error); // Ezt átírhatod a saját hibakezelési logikádra
+            naming: { top: false, getLabel: function (character, row, column) { return firstSeatLabel++; } },
+            click: function () {
+                if (this.status() == "available") {
+                    $("<li>" + this.data().category + " Seat # " + this.settings.label + ": <b>" + this.data().price + " HUF</b> <a href='#' class='cancel-cart-item'>[cancel]</a></li>")
+                        .attr("id", "cart-item-" + this.settings.id)
+                        .data("seatId", this.settings.id)
+                        .appendTo($cart);
+
+                    $counter.text(sc.find("selected").length + 1);
+                    $total.text(recalculateTotal(sc) + this.data().price);
+                    return "selected";
+                } else if (this.status() == "selected") {
+                    $counter.text(sc.find("selected").length - 1);
+                    $total.text(recalculateTotal(sc) - this.data().price);
+                    $("#cart-item-" + this.settings.id).remove();
+                    return "available";
+                } else if (this.status() == "unavailable") {
+                    return "unavailable";
+                } else {
+                    return this.style();
+                }
             }
         });
+
+        var bSeats = sc.find("b");
+        bSeats.status("unavailable");
+
+        $("#selected-seats-<?= $screeningId ?>").on("click", ".cancel-cart-item", function () {
+            event.preventDefault();
+            sc.get($(this).parents("li:first").data("seatId")).click();
+        });
+
+        String.prototype.replaceAt = function (index, replacement) {
+            if (index >= this.length) {
+                return this.valueOf();
+            }
+            return this.substring(0, index) + replacement + this.substring(index + 1);
+        };
+
+        $('.checkout-button[data-screening-id="<?= $screeningId ?>"]').click(function () {
+            var selectedSeats = sc.find('selected'); // Kiválasztott székek lekérése
+            var seatIds = [];
+
+            // Kiválasztott székek azonosítóinak gyűjtése
+            selectedSeats.each(function () {
+                seatIds.push(this.settings.id);
+                var seatIdParts = this.settings.id.split('_');
+                var i = seatIdParts[0] - 1;
+                var j = seatIdParts[1] - 1;
+                seatMap[i] = seatMap[i].replaceAt(j, 'b');
+            });
+
+            // AJAX kérés az adatok mentésére az adatbázisba
+            $.ajax({
+                url: '../../concerns/save_reservation.php',
+                method: 'POST',
+                data: {
+                    seatIds: seatIds, // Kiválasztott székek azonosítói
+                    screeningId: <?= $screeningId ?>, // A vetítés azonosítója
+                    seatMap: seatMap // Seat map adatok
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.log(seatIds);
+                    console.log(error);
+                }
+            });
+        });
     });
-		});
+</script>
 
-
-		function recalculateTotal(sc) {
-			var total = 0;
-		
-			//basically find every selected seat and sum its price
-			sc.find('selected').each(function () {
-				total += this.data().price;
-			});
-			
-			return total;
-		}
-    </script>
+<?php
+}
+?>
