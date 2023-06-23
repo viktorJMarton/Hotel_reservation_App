@@ -1,9 +1,5 @@
 <?php
-<<<<<<< Updated upstream
-require 'models/Database.php';
-=======
-require_once 'models/Database.php';
->>>>>>> Stashed changes
+require __DIR__ . '/../models/Database.php';
 
 // Define the database connection parameters
 // Check if the database connection has already been established
