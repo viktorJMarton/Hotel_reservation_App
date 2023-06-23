@@ -21,11 +21,12 @@ a {
     margin: 0 auto;
     width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center; /* Módosítás: középre igazítás vízszintesen */
     align-items: flex-end;
     background: white;
     padding-bottom: 2%;
 }
+
 .booking-details {
 	float: left;
 	text-align: left;
@@ -77,9 +78,31 @@ div.seatCharts-seat.unavailable {
 div.seatCharts-container {
     border-right: 1px dotted #adadad;
     width: auto;
+    min-width: 221px;
     padding: 10px;
     float: left;
 }
+.screening-details{
+	margin-left:10px;
+	padding-left: 100px;
+	padding:5px;
+
+}
+
+.movie-details{
+	padding:5px;
+	border-left: 1px dotted #adadad;
+	border-right: 1px dotted #adadad;
+}
+
+.movie-poster {
+    background-color: red;
+    height: 23vh;
+	align-self: center;
+	margin-right: 10%;
+	margin-left: 10%;
+}
+
 div.seatCharts-legend {
 	padding-left: 0px;
 	position: inherit;
@@ -111,6 +134,9 @@ span.seatCharts-legendDescription {
     cursor: pointer;
     transition: all 0.7s ease;
 }
+.disabled-button {
+	cursor: not-allowed;
+  }
 
 .checkout-button:hover {
     border-style: solid;

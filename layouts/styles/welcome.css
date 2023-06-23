@@ -160,6 +160,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
+  font-size: x-large;
 }
 
 .column {

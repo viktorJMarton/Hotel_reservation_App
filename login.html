@@ -1,9 +1,32 @@
-<form action="login.php" method="post">
-    <label for="username">Username:</label>
-    <input type="text" name="username" id="username">
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password">
-    <br>
-    <input type="submit" value="Log in">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<head>
+  <title>Movie Ticket | Log In</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="layouts/styles/login.css">
+</head>
+<body>
+    <div class="background">
+    </div>
+    <form action="/concerns/login.php" method="POST">
+        <h3>Kérjük jelentkezz be a foglaláshoz</h3>
+
+        <label for="username">Email</label>
+        <input type="text" placeholder="example@example.org" id="username" name="email">
+
+        <label for="password">jelszó</label>
+        <input type="password" placeholder="Password" id="password" name="pwd">
+
+        <button>Mehet</button>
+        <div class="social">
+        
+        </div>
+    </form>
+</body>
+</html>
