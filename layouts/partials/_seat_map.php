@@ -1,6 +1,6 @@
 <head>
-    <link rel="stylesheet" type="text/css" href="../3rd_party/jquerry_seat_chart/jquery.seat-charts.css">
-    <link rel="stylesheet" type="text/css" href="../3rd_party/jquerry_seat_chart/styles.css">
+    <link rel="stylesheet" type="text/css" href="./3rd_party/jquerry_seat_chart/jquery.seat-charts.css">
+    <link rel="stylesheet" type="text/css" href="./3rd_party/jquerry_seat_chart/styles.css">
 </head>
 
 <?php
@@ -11,6 +11,8 @@ function renderSeatMap($db, $screeningId, $isRes)
     $price = $db->getPriceOfScreening($screeningId);
     $movie = $db->getMovieByScreening($screeningId);
     $start = $db->getStartOfScreening($screeningId);
+    $stamp = strtotime($start);
+    $time  = date('H:i',$stamp);
     $duration = $db->getDurationOfScreening($screeningId);
     $is_already_booked = $db->checkIfAlreadyBooked($email,$screeningId);
     if($isRes){
@@ -26,7 +28,7 @@ function renderSeatMap($db, $screeningId, $isRes)
         <h3>Kiválasztott Helyek (<span id="counter-<?= $screeningId ?>">0</span>):</h3>
         <ul id="selected-seats-<?= $screeningId ?>"></ul>
       
-        Total: <b><span id="total-<?= $screeningId ?>">0</span> HUF</b>
+        Total: <b><span id="total-<?= $screeningId ?>">0</span> EUR</b>
         
         <?php if ($isRes): ?>
             <button class="delete-button" data-screening-id="<?= $screeningId ?>">Törlés</button>
@@ -43,18 +45,18 @@ function renderSeatMap($db, $screeningId, $isRes)
     </div>
     <div class="screening-details">
         <h3>Vetítés:</h3>
-        <p>Kezdete: <?= $start ?></p>
+        <p>Kezdete: <?= $time?></p>
         <p>Hossz:<?= $duration ?></p>
     </div>
 
     <div class="movie-poster">
-        <img src="<?= $movie['poster_path'] ?>" alt="Movie Poster" style="height: 100%;">
+        <img src="./<?= $movie['poster_path'] ?>" alt="Movie Poster" style="height: 100%;">
     </div>
 </div>
 <br>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="../3rd_party/jquerry_seat_chart/jquery.seat-charts.js"></script>
+<script src="./3rd_party/jquerry_seat_chart/jquery.seat-charts.js"></script>
 
 <script>
     function recalculateTotal(sc) {
@@ -62,7 +64,7 @@ function renderSeatMap($db, $screeningId, $isRes)
         sc.find("selected").each(function () {
             total += this.data().price;
         });
-        return total;
+      return  parseFloat(total.toFixed(2));
     }
 
     function reloadPage() {
@@ -90,7 +92,7 @@ function renderSeatMap($db, $screeningId, $isRes)
             click: function () {
                 <?php if (!$isRes): ?>
                 if (this.status() == "available") {
-                    $("<li>" + this.data().category + " Seat # " + this.settings.label + ": <b>" + this.data().price + " HUF</b> <a href='#' class='cancel-cart-item'>[cancel]</a></li>")
+                    $("<li>" + this.data().category + " Seat # " + this.settings.label + ": <b>" + this.data().price + " €</b> <a href='#' class='cancel-cart-item'>[cancel]</a></li>")
                         .attr("id", "cart-item-" + this.settings.id)
                         .data("seatId", this.settings.id)
                         .appendTo($cart);
@@ -140,8 +142,8 @@ function renderSeatMap($db, $screeningId, $isRes)
             });
 
             $.ajax({
-                url: '../../concerns/save_reservation.php',
-                method: 'GET',
+                url: './concerns/save_reservation.php',
+                method: 'POST',
                 data: {
                     seatIds: seatIds,
                     screeningId: <?= $screeningId ?>,
@@ -172,23 +174,37 @@ function renderSeatMap($db, $screeningId, $isRes)
             }
 
             for(var seatid in seatsArray){
-             
-            }
-            $('.seatCharts-seat').unbind('mouseenter mouseleave click');
-            $('.seatCharts-seat').css('cursor', 'not-allowed');
+                console.log(seatid);
+                var screeningId = <?= $screeningId ?>;
+                $("#seat-map-23").find("#"+seatid).addClass("selected");
+                $("#seat-map-23").find("#"+seatid).removeClass("unavailable");
 
+                $("#seat-map-25").find("#"+seatid).addClass("selected");
+                $("#seat-map-23").find("#"+seatid).removeClass("unavailable");
+               
+                $('.seatCharts-seat').unbind('mouseenter mouseleave click');
+           	
+              
+            }
+           
 
         <?php endif; ?>
 
-        <?php  if ($is_already_booked): ?>
-         
-            $('#counter-<?= $screeningId ?>').html(seatsArray.length);
 
+         <?php  if ($is_already_booked ): ?>
           $('.checkout-button').css('cursor', 'not-allowed','disabled');
           $('.checkout-button').prop('disabled', true);
-          
-      
-          
+ 					$('.seatCharts-seat').unbind('mouseenter mouseleave click');
+          $('#seat-map-'+scr_id).css('cursor', 'not-allowed');
+
+				
+        $('#infos-'+scr_id).empty().html("Erre a vetítésre már foglalt. <br> Törölje a  foglalást ha újra szeretne foglalni.  ");
+
+
+
+
+
+
         <?php endif; ?>
 
         $('.delete-button[data-screening-id="<?= $screeningId ?>"]').click(function () {
@@ -196,7 +212,7 @@ function renderSeatMap($db, $screeningId, $isRes)
             var screeningId = $(this).data("screening-id");
 
             $.ajax({
-                url: '../../concerns/delete_reservation.php',
+                url: './concerns/delete_reservation.php',
                 method: 'POST',
                 data: {
                     screeningId: screeningId,

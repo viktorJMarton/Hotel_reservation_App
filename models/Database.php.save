@@ -76,9 +76,6 @@ class Database{
     }
 
 
-
-
-
 public function registerUser($email, $pwd) {
   if (!isset(self::$db)) {
       $this->connect();
@@ -96,9 +93,6 @@ public function registerUser($email, $pwd) {
       echo "Error: " . $e->getMessage();
       return null;
   }
-}
-
-
     public function prepare($query_str) {
       if (!isset(self::$db)){
         $this->connect();
@@ -169,33 +163,29 @@ public function getScreenings($date, $movieName) {
 }
 
    
-  public function saveReservation($seatIds, $screeningId, $seatMap, $numOfRes) {
+  public function saveReservation($seatIds, $screeningId, $seatMap,$numOfRes) {
     if (!isset(self::$db)) {
-        $this->connect();
+      $this->connect();
     }
-
+      
     try {
-        $seatIdsString = implode(',', $seatIds);
-        $seatMapString = json_encode($seatMap);
-
-        $stmt = self::$db->prepare("SELECT public.save_reservation(:seatIds, :screeningId, :seatMap, :num_of_res)");
-        $stmt->bindParam(':seatIds', $seatIdsString);
-        $stmt->bindParam(':screeningId', $screeningId);
-        $stmt->bindParam(':seatMap', $seatMapString);
-        $stmt->bindParam(':num_of_res', $numOfRes);
-
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        var_dump($result);
-        return $result;
+      $seatIdsString = implode(',', $seatIds);
+      $seatMapString = json_encode($seatMap);
+      
+     
+      $stmt = self::$db->prepare("SELECT public.save_reservation(:seatIds, :screeningId, :seatMap,:num_of_res)");
+      $stmt->bindParam(':seatIds', $seatIdsString);
+      $stmt->bindParam(':screeningId', $screeningId);
+      $stmt->bindParam(':seatMap', $seatMapString);
+      $stmt->bindParam(':num_of_res',$numOfRes);
+      
+  
+      $stmt->execute();
 
     } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-        return $e->getMessage();
+      
     }
-}
-
+  }
 
 
   
@@ -333,8 +323,6 @@ public function deleteReserv($screeningId, $email)
         $stmt->bindParam(':screeningId', $screeningId);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
-
-
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }

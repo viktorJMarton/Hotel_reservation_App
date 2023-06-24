@@ -1,5 +1,6 @@
 <?php
-$date = isset($_POST['date']) ? $_POST['date'] : date('Y-m-d');
+
+$date = isset($_POST['date']) ? $_POST['date'] :date('Y-m-d');
 
 $selectedMovie = isset($_POST['movie']) ? $_POST['movie'] : NULL;
 
@@ -14,7 +15,7 @@ if (!empty($screeningIds)) {
     }
 } elseif(!empty($selectedMovie)) {
     echo "<div>Sajnos a kiválasztott filmet nem vetítjük a megadott napon.</div>"; 
-}else{
+}elseif(empty($date)){
     echo "<div>ezen a napon nincsenek vetítések.</div>";
 }
 ?>
